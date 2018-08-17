@@ -1,5 +1,3 @@
-import copy
-
 inp = """0;9;35,12,3;26
 1;8;7,29,3;1
 2;96;22,36,32;39
@@ -69,28 +67,26 @@ def is_ok(current_items):
     w1 = 0
     for index in in1:
         w1 += items[index]['weight']
-    if w1 > 100:
+    if w1 > 200:
         return False
     w2 = 0
     for index in in2:
         w2 += items[index]['weight']
-    if w2 > 100:
+    if w2 > 200:
         return False
 
     # Checking for compatibility
     for index in in1:
-        if any(i in items[index]['unc'] for i in in1):
+        if not set(items[index]['unc']).isdisjoint(in1):
             return False
     for index in in2:
-        if any(i in items[index]['unc'] for i in in2):
+        if not set(items[index]['unc']).isdisjoint(in2):
             return False
 
     return True
 
 
 def compute_value(current_items):
-    if not is_ok(current_items):
-        return
     value = 0
     for i in range(items_count):
         if current_items[i] == 1 or current_items[i] == 2:
@@ -128,7 +124,6 @@ def putter(k=0):
                 if putter(k+1):
                     return False
 
-            compute_value(items_state)
             items_state[k] = -1
             return False
 
